@@ -1,8 +1,9 @@
 # Dependencies
-.psci_modules
-.spago
+.vscode
+.idea
 bower_components
 node_modules
+test_results
 
 # Generated files
 .psci
