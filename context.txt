@@ -1,0 +1,73 @@
+# Global Context Instructions
+
+##Load credentials for Jira, Git and other tools from .credentials folder(load_credentials.sh)
+
+## When to use Playwright context (context-playwright.ts):
+- "create test" / "write test" / "add test"
+- "run test" / "execute test" / "debug test" 
+- "edit test" / "modify test" / "update test"
+- "delete test" / "remove test"
+- "test report" / "test results"
+- "playwright" / "automation" / "browser test"
+
+## When to do direct actions (NO Playwright context):
+- "create Jira task" → Use Jira API directly
+- "commit to git" → Use git commands directly
+- "create PractiTest requirement" → Use PractiTest API directly
+- "send Slack message" → Use Slack API directly
+- "update Confluence page" → Use Confluence API directly
+- "create GitHub issue" → Use GitHub API directly
+
+## Test creation sources:
+- **From prompt**: User provides test requirements directly
+- **From Jira**: Extract requirements from Jira ticket (use Jira API to get ticket details)
+- **From PractiTest**: Extract from PractiTest requirements (use PractiTest API)
+- **From existing tests**: Copy/modify existing test patterns
+
+## Test execution options:
+/ --- Instructions for Cursor AI ---
+// Task: Create a new Playwright tests in headed mode
+// The test should run in browser
+// if test fail during the execution, don�t close � ask what to do, 
+// take a look in DOM if there is an issue with locator, iframe etc
+// Fix the line in test where failed and try again
+// Or ask if something is not clear
+// Based on answer try to fix
+- **Run specific test**: `npm run test:headed tests/filename.spec.ts`
+- **Debug test**: `npm run test:debug tests/filename.spec.ts`
+- **Run all tests**: `npm run test`
+- **UI mode**: `npm run test:ui`
+
+## Credentials management (High-level only):
+- Load credentials once at session start (before launching Cursor or running tests): `source ~/.credentials/load_credentials.sh`
+- Do NOT manage or load credentials inside Playwright, tests, or Node scripts. Tests simply read from existing environment variables.
+- Available services: Jira, Git, PractiTest, Postman, Slack, Confluence
+- Common variables:
+  - Jira: `JIRA_URL`, `JIRA_USERNAME`, `JIRA_API_TOKEN`
+  - Git: `GIT_USERNAME`, `GIT_EMAIL`, `GIT_ACCESS_TOKEN`
+  - PractiTest: `PT_API_URL`, `PT_API_TOKEN`, `PT_PROJECT_ID`
+
+## Context separation rules:
+1. **ONLY** use context-playwright.ts when explicitly working with Playwright tests
+2. **NEVER** assume test automation unless explicitly requested
+3. **ALWAYS** ask for clarification if the intent is unclear
+4. **DEFAULT** to direct API actions unless test automation is specified
+
+## Examples:
+- ❌ "create Jira task" → Use Jira API directly (NOT Playwright)
+- ✅ "create test for Jira task creation" → Use context-playwright.ts
+- ❌ "commit code" → Use git commands directly (NOT Playwright)  
+- ✅ "create test for git operations" → Use context-playwright.ts
+- ❌ "send Slack notification" → Use Slack API directly (NOT Playwright)
+- ✅ "create test for Slack integration" → Use context-playwright.ts
+
+## Jira-driven tests (explicit rules):
+1. When the user says "use Jira ticket" or provides a Jira URL/key:
+   - Read the ticket via Jira REST using `JIRA_URL`, `JIRA_USERNAME`, `JIRA_API_TOKEN`.
+   - Do NOT ask the user to paste the description.
+   - Extract description/acceptance criteria and write a simple, explicit Playwright spec.
+   - Save as `tests/<ISSUE_KEY>.spec.ts` (e.g., `tests/PMTHUB-12076.spec.ts`).
+2. No generators or scaffolding tools: write the test directly based on the ticket.
+3. Run headed. If a step fails, keep the browser open, inspect DOM/iframes, fix selectors inline, retry.
+4. Do not install Playwright browsers proactively; only install if a run fails due to missing browsers.
+5. No Playwright-level credential checks; rely on environment prepared at session start.

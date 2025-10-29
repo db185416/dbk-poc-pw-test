@@ -1,1 +1,0 @@
-// --- Instructions for Cursor AI ---// Task: Create a new Playwright tests in headed mode// The test should run in browser// if test fail during the execution, don’t close – ask what to do, // take a look in DOM if there is an issue with locator, iframe etc// Fix the line in test where failed and try again// Or ask if something is not clear// Based on answer try to fix

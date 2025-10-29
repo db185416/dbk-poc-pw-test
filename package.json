@@ -6,8 +6,7 @@
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-  "test:headed": "playwright test --project=chromium --headed",
-  "test:debug": "PWDEBUG=1 playwright test tests/interactive.spec.ts --project=chromium --headed",
+    "test:headed": "playwright test --project=chromium --headed",
     "codegen": "playwright codegen",
     "show-report": "playwright show-report",
     "install:browsers": "playwright install --with-deps"

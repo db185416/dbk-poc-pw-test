@@ -1,0 +1,10 @@
+# Cursor AI Security - Ignore sensitive files
+~/.credentials/
+~/.credentials/config.json
+~/.credentials/load_credentials.sh
+~/.zshrc_credentials
+**/credentials.json
+**/config.json
+**/.env
+**/.env.local
+**/.env.*.local

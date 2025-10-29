@@ -1,12 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Import context.ts as helper/instructions
-import './tests/context';
+// Import context-playwright.ts as helper/instructions
+import './tests/context-playwright';
 
 export default defineConfig({
   testDir: './tests',
-  timeout: 120_000,
-  expect: { timeout: 15_000 },
+  timeout: 20_000,
+  expect: { timeout: 10_000 },
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'https://playwright.dev',
